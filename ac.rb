@@ -5,24 +5,46 @@ class StackSearch
   base_uri 'https://api.stackexchange.com'
 
   def search
-    puts "what do you want to search?"
+    puts "What do you want to search?"
     input = gets.chomp
-    url = "/2.2/search?order=desc&sort=activity&intitle=#{input}&site=stackoverflow"
+    puts "Do you want to sort by activity (A) or relevance (R)?"
+    sort_by_input = gets.chomp
+    until sort_by_input.downcase == "a" or sort_by_input.downcase == "r"
+      puts "Please select (A)ctivity or (R)elevance"
+      sort_by_input = gets.chomp
+    end
+    if sort_by_input.downcase == "a"
+      sort_by = "relevance"
+    elsif sort_by_input.downcase == "r"
+      sort_by = "activity"
+    end
+
+    url = "/2.2/search?order=desc&sort=#{sort_by}&intitle=#{input}&site=stackoverflow"
     get_url = self.class.get(url)
     get_url.parsed_response
+  end
+
+  def display_results
+    items = self.search["items"]
+    if items.length == 0
+      puts ""
+      puts "Sorry, no results. Please try again."
+      puts ""
+    end
+
+    i = 0
+    while i < items.length
+      puts ""
+      puts items[i]["title"]
+      puts items[i]["link"]
+      puts ""
+      puts "---------------------------------------------------------"
+      i += 1
+    end
   end
 
 end
 
 new_search = StackSearch.new
+new_search.display_results
 
-items = new_search.search["items"]
-i = 0
-while i < items.length
-  puts ""
-  puts items[i]["title"]
-  puts items[i]["link"]
-  puts ""
-  puts "---------------------------------------------------------"
-  i += 1
-end
