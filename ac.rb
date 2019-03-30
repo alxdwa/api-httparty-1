@@ -18,8 +18,10 @@ class StackSearch
     elsif sort_by_input.downcase == "r"
       sort_by = "activity"
     end
-
-    url = "/2.2/search?order=desc&sort=#{sort_by}&intitle=#{input}&site=stackoverflow"
+    #basic search (title):
+    # url = "/2.2/search?order=desc&sort=#{sort_by}&intitle=#{input}&site=stackoverflow"
+    #advanced search:
+    url = "/2.2/search/advanced?order=desc&sort=#{sort_by}&q=#{input}&site=stackoverflow"
     get_url = self.class.get(url)
     get_url.parsed_response
   end
